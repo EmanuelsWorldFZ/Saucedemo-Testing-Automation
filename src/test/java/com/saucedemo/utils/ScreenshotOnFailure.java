@@ -2,14 +2,13 @@ package com.saucedemo.utils;
 
 import com.microsoft.playwright.Page;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 
-public class ScreenshotOnFailure implements TestWatcher {
+public class ScreenshotOnFailure implements TestExecutionExceptionHandler {
   private final Supplier<Page> pageSupplier;
   private final Path outputDirectory;
 
@@ -19,21 +18,23 @@ public class ScreenshotOnFailure implements TestWatcher {
   }
 
   @Override
-  public void testFailed(ExtensionContext context, Throwable cause) {
+  public void handleTestExecutionException(ExtensionContext context, Throwable cause)
+      throws Throwable {
     Page page = pageSupplier.get();
     if (page == null || page.isClosed()) {
-      return;
+      throw cause;
     }
 
     try {
       Files.createDirectories(outputDirectory);
-    } catch (IOException exception) {
-      throw new UncheckedIOException("Unable to create screenshot directory", exception);
+      String fileName = context.getDisplayName().replaceAll("[^a-zA-Z0-9.-]", "_");
+      page.screenshot(new Page.ScreenshotOptions()
+          .setPath(outputDirectory.resolve(fileName + ".png"))
+          .setFullPage(true));
+    } catch (IOException | RuntimeException screenshotFailure) {
+      cause.addSuppressed(new RuntimeException(
+          "Unable to capture screenshot for " + context.getDisplayName(), screenshotFailure));
     }
-
-    String fileName = context.getDisplayName().replaceAll("[^a-zA-Z0-9.-]", "_");
-    page.screenshot(new Page.ScreenshotOptions()
-        .setPath(outputDirectory.resolve(fileName + ".png"))
-        .setFullPage(true));
+    throw cause;
   }
 }

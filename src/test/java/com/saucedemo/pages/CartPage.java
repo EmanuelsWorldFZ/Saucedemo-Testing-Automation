@@ -15,6 +15,11 @@ public class CartPage {
     return page.locator(".cart_item").count();
   }
 
+  public int getCartCount() {
+    var badge = page.getByTestId("shopping-cart-badge");
+    return badge.count() == 0 ? 0 : Integer.parseInt(badge.innerText());
+  }
+
   public void removeItem(String productName) {
     page.locator(".cart_item")
         .filter(new Locator.FilterOptions().setHasText(productName))

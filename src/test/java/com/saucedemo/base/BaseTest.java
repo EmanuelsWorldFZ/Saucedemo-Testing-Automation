@@ -4,6 +4,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.saucedemo.pages.LoginPage;
 import com.saucedemo.utils.ScreenshotOnFailure;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
@@ -51,5 +52,11 @@ public abstract class BaseTest {
   protected String baseUrl() {
     return System.getProperty(
         "baseUrl", System.getenv().getOrDefault("SAUCEDEMO_BASE_URL", DEFAULT_BASE_URL));
+  }
+
+  protected void loginAsStandardUser() {
+    LoginPage loginPage = new LoginPage(page);
+    loginPage.open(baseUrl());
+    loginPage.login("standard_user", "secret_sauce");
   }
 }
