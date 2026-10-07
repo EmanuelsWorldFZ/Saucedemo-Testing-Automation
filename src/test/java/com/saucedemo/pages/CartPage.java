@@ -12,6 +12,7 @@ public class CartPage {
   }
 
   public int getItemCount() {
+    page.getByText("Your Cart", new Page.GetByTextOptions().setExact(true)).waitFor();
     return page.locator(".cart_item").count();
   }
 

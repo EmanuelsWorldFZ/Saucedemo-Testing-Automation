@@ -12,7 +12,9 @@ public class InventoryPage {
   }
 
   public boolean isDisplayed() {
-    return page.getByText("Products", new Page.GetByTextOptions().setExact(true)).isVisible();
+    Locator heading = page.getByText("Products", new Page.GetByTextOptions().setExact(true));
+    heading.waitFor();
+    return heading.isVisible();
   }
 
   public void addToCart(String productName) {
@@ -28,11 +30,13 @@ public class InventoryPage {
 
   public void openCart() {
     page.getByTestId("shopping-cart-link").click();
+    page.getByText("Your Cart", new Page.GetByTextOptions().setExact(true)).waitFor();
   }
 
   public void logout() {
-    page.getByTestId("open-menu").click();
+    page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Open Menu")).click();
     page.getByTestId("logout-sidebar-link").click();
+    page.getByTestId("login-button").waitFor();
   }
 
   private Locator product(String productName) {

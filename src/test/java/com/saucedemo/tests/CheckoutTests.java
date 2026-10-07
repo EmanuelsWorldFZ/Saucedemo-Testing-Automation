@@ -22,6 +22,7 @@ class CheckoutTests extends BaseTest {
     CheckoutPage checkoutPage = new CheckoutPage(page);
     checkoutPage.enterDetails("Ada", "Lovelace", "N1 1AA");
     checkoutPage.continueToOverview();
+    page.getByText("Checkout: Overview").waitFor();
     assertEquals("Checkout: Overview", page.locator(".title").innerText());
     assertEquals(1, page.locator(".cart_item").count());
 
