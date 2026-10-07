@@ -25,6 +25,7 @@ public abstract class BaseTest {
   @BeforeEach
   void setUpBrowser() {
     playwright = Playwright.create();
+    playwright.selectors().setTestIdAttribute("data-test");
     String browserName = System.getProperty(
         "browser", System.getenv().getOrDefault("PLAYWRIGHT_BROWSER", "chromium"));
     BrowserType browserType = switch (browserName.toLowerCase()) {
