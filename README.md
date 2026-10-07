@@ -25,7 +25,7 @@ Open this project in IntelliJ IDEA as a Maven project and allow Maven to import
 the dependencies. Playwright browser binaries are installed separately:
 
 ```sh
-mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI \
+mvn exec:java -Dexec.classpathScope=test -Dexec.mainClass=com.microsoft.playwright.CLI \
   -Dexec.args="install chromium"
 ```
 
@@ -39,7 +39,7 @@ Tests run headlessly in Chromium by default. Install the other browser binaries
 and choose a browser for cross-browser runs:
 
 ```sh
-mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI \
+mvn exec:java -Dexec.classpathScope=test -Dexec.mainClass=com.microsoft.playwright.CLI \
   -Dexec.args="install firefox webkit"
 mvn test -Dbrowser=firefox
 mvn test -Dbrowser=webkit

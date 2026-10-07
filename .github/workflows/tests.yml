@@ -21,6 +21,7 @@ jobs:
       - name: Install Playwright browser
         run: >-
           mvn -B exec:java
+          -Dexec.classpathScope=test
           -Dexec.mainClass=com.microsoft.playwright.CLI
           -Dexec.args="install --with-deps ${{ matrix.browser }}"
       - name: Run tests
